@@ -1,0 +1,88 @@
+entrypoints Program ;
+
+-- programs ------------------------------------------------
+Program.   Program ::= [Def] ;
+
+Def.       Def ::= Type Ident "(" [Arg] ")" Block ;
+separator nonempty Def "" ;
+
+Arg.       Arg ::= Type Ident;
+separator  Arg "," ;
+
+Block.     Block ::= "{" [Stm] "}" ;
+
+-- statements ----------------------------------------------
+SEmpty.    Stm ::= ";" ;
+SBlock.    Stm ::= Block ;
+SDecl.     Stm ::= Type [Item] ";" ;
+
+INoInit.   Item ::= Ident ;
+IInit.     Item ::= Ident "=" Exp ;
+separator nonempty Item "," ;
+
+SAss.      Stm ::= Ident "=" Exp  ";" ;
+SRefAss.   Stm ::= Ident "[" Exp "]" "=" Exp  ";" ;
+SIncr.     Stm ::= Ident "++"  ";" ;
+SDecr.     Stm ::= Ident "--"  ";" ;
+SRet.      Stm ::= "return" Exp ";" ;
+SVRet.     Stm ::= "return" ";" ;
+SIf.       Stm ::= "if" "(" Exp ")" Stm  ;
+SIfElse.   Stm ::= "if" "(" Exp ")" Stm "else" Stm ;
+SWhile.    Stm ::= "while" "(" Exp ")" Stm ;
+SFor.      Stm ::= "for" "(" Type Ident ":" Exp ")" Stm ;
+SExp.      Stm ::= Exp  ";" ;
+separator  Stm "" ;
+
+-- Types ---------------------------------------------------
+TInt.      Type ::= "int" ;
+TDbl.      Type ::= "double" ;
+TBool.     Type ::= "boolean" ;
+TVoid.     Type ::= "void" ;
+TArray.    Type ::= Type "[]";
+internal   TString. Type ::= ;
+-- separator  Type "," ;
+
+
+-- Expessions ---------------------------------------------
+EVar.      Exp6 ::= Ident ;
+EInt.      Exp6 ::= Integer ;
+EDbl.      Exp6 ::= Double;
+ETrue.     Exp6 ::= "true" ;
+EFalse.    Exp6 ::= "false" ;
+EApp.      Exp6 ::= Ident "(" [Exp] ")" ;
+EString.   Exp6 ::= String ;
+ERef.      Exp6 ::= Ident "[" Exp "]" ;
+ENew.      Exp6 ::= "new" Type "[" Exp "]" ;
+EALen.     Exp6 ::= Ident "." "length" ;
+ENeg.      Exp5 ::= "-" Exp6 ;
+ENot.      Exp5 ::= "!" Exp6 ;
+EMul.      Exp4 ::= Exp4 MulOp Exp5 ;
+EAdd.      Exp3 ::= Exp3 AddOp Exp4 ;
+ERel.      Exp2 ::= Exp2 RelOp Exp3 ;
+EAnd.      Exp1 ::= Exp2 "&&" Exp1 ;
+EOr.       Exp  ::= Exp1 "||" Exp ;
+coercions  Exp 6 ;
+separator  Exp "," ;
+
+internal EType. Exp ::= Exp Type ;
+
+-- operators -----------------------------------------------
+OPlus.      AddOp ::= "+" ;
+OMinus.     AddOp ::= "-" ;
+
+OTimes.     MulOp ::= "*" ;
+ODiv.       MulOp ::= "/" ;
+OMod.       MulOp ::= "%" ;
+
+OLt.        RelOp ::= "<" ;
+OLeq.       RelOp ::= "<=" ;
+OGt.        RelOp ::= ">" ;
+OGeq.       RelOp ::= ">=" ;
+OEq.        RelOp ::= "==" ;
+ONEq.       RelOp ::= "!=" ;
+
+-- comments ------------------------------------------------
+comment    "#" ;
+comment    "//" ;
+comment    "/*" "*/" ;
+
